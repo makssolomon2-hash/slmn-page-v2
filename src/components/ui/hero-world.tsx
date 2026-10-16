@@ -13,7 +13,6 @@ export default function HeroWorld({ intro = false }: { intro?: boolean }) {
     const background = backgroundRef.current;
     if (!background) return;
     const hero = document.querySelector<HTMLElement>("#main-hero");
-    const projects = document.querySelector<HTMLElement>("#development");
     const shade = background.querySelector<HTMLElement>(".hero-world-shade");
 
     let pointerFrame = 0;
@@ -30,29 +29,19 @@ export default function HeroWorld({ intro = false }: { intro?: boolean }) {
       });
     };
     const updateShade = () => {
-      if (!(hero && projects && shade)) return;
+      if (!(hero && shade)) return;
 
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
       const heroStart = hero.offsetTop - viewportHeight;
       const heroEnd = hero.offsetTop + hero.offsetHeight;
-      const projectsStart = projects.offsetTop - viewportHeight;
-      const projectsEnd = projects.offsetTop;
-      const pageEnd = Math.max(
-        projectsEnd,
-        document.documentElement.scrollHeight - viewportHeight,
-      );
+      const progress = progressBetween(scrollY, heroStart, heroEnd);
 
-      let opacity = 0.14 * progressBetween(scrollY, heroStart, heroEnd);
-      if (scrollY >= projectsStart) {
-        opacity =
-          0.14 + 0.14 * progressBetween(scrollY, projectsStart, projectsEnd);
-      }
-      if (scrollY >= projectsEnd) {
-        opacity =
-          0.28 + 0.14 * progressBetween(scrollY, projectsEnd, pageEnd);
-      }
-      shade.style.opacity = opacity.toFixed(3);
+      shade.style.opacity = (0.62 * progress).toFixed(3);
+      background.style.setProperty(
+        "--background-blur",
+        `${(2 + 30 * progress).toFixed(1)}px`,
+      );
     };
 
     window.addEventListener("pointermove", moveGlow, { passive: true });

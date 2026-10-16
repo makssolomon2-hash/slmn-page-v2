@@ -27,12 +27,15 @@ export default function SignalParticleField({
 }: {
   intro?: boolean;
 }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const ambientCanvasRef = useRef<HTMLCanvasElement>(null);
+  const glyphCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
+    const ambientCanvas = ambientCanvasRef.current;
+    const glyphCanvas = glyphCanvasRef.current;
+    const ambientContext = ambientCanvas?.getContext("2d");
+    const glyphContext = glyphCanvas?.getContext("2d");
+    if (!ambientCanvas || !glyphCanvas || !ambientContext || !glyphContext) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let width = 1;
@@ -46,40 +49,43 @@ export default function SignalParticleField({
     let pixelRatio = 1;
 
     const createParticles = () => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = glyphCanvas.getBoundingClientRect();
       width = Math.max(rect.width, 1);
       height = Math.max(rect.height, 1);
       pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-      canvas.width = Math.round(width * pixelRatio);
-      canvas.height = Math.round(height * pixelRatio);
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      for (const layer of [ambientCanvas, glyphCanvas]) {
+        layer.width = Math.round(width * pixelRatio);
+        layer.height = Math.round(height * pixelRatio);
+      }
+      ambientContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      glyphContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-      const glyphCanvas = document.createElement("canvas");
-      glyphCanvas.width = Math.ceil(width);
-      glyphCanvas.height = Math.ceil(height);
-      const glyphContext = glyphCanvas.getContext("2d", {
+      const shapeCanvas = document.createElement("canvas");
+      shapeCanvas.width = Math.ceil(width);
+      shapeCanvas.height = Math.ceil(height);
+      const shapeContext = shapeCanvas.getContext("2d", {
         willReadFrequently: true,
       });
       const glyphPoints: { x: number; y: number }[] = [];
 
-      if (intro && glyphContext) {
+      if (intro && shapeContext) {
         const fontSize = Math.min(width * 0.6, height * 0.82, 600);
-        glyphContext.clearRect(0, 0, width, height);
-        glyphContext.font = `900 ${fontSize}px Arial, sans-serif`;
-        glyphContext.textAlign = "center";
-        glyphContext.textBaseline = "middle";
-        glyphContext.fillStyle = "#fff";
-        glyphContext.fillText("SLMN", width / 2, height / 2, width * 0.96);
+        shapeContext.clearRect(0, 0, width, height);
+        shapeContext.font = `900 ${fontSize}px Arial, sans-serif`;
+        shapeContext.textAlign = "center";
+        shapeContext.textBaseline = "middle";
+        shapeContext.fillStyle = "#fff";
+        shapeContext.fillText("SLMN", width / 2, height / 2, width * 0.96);
 
-        const pixels = glyphContext.getImageData(
+        const pixels = shapeContext.getImageData(
           0,
           0,
-          glyphCanvas.width,
-          glyphCanvas.height,
+          shapeCanvas.width,
+          shapeCanvas.height,
         ).data;
         for (let y = 0; y < height; y += 2) {
           for (let x = 0; x < width; x += 2) {
-            if (pixels[(y * glyphCanvas.width + x) * 4 + 3] > 80) {
+            if (pixels[(y * shapeCanvas.width + x) * 4 + 3] > 80) {
               glyphPoints.push({ x, y });
             }
           }
@@ -157,16 +163,17 @@ export default function SignalParticleField({
       const dt = Math.min((now - lastTime) / 1000, 0.035);
       lastTime = now;
 
-      context.clearRect(0, 0, width, height);
+      ambientContext.clearRect(0, 0, width, height);
+      glyphContext.clearRect(0, 0, width, height);
 
       if (ambientAlpha > 0.05 && !reducedMotion.matches) {
-        context.beginPath();
+        ambientContext.beginPath();
         for (const particle of particles) {
           if (!particle.ambient) continue;
           const nextX = particle.x + particle.vx * dt;
           const nextY = particle.y + particle.vy * dt;
-          context.moveTo(particle.x, particle.y);
-          context.lineTo(nextX, nextY);
+          ambientContext.moveTo(particle.x, particle.y);
+          ambientContext.lineTo(nextX, nextY);
 
           particle.x = ((nextX % width) + width) % width;
           particle.y = ((nextY % height) + height) % height;
@@ -185,15 +192,15 @@ export default function SignalParticleField({
             particle.vy = (particle.vy / speed) * 520;
           }
         }
-        context.globalAlpha = ambientAlpha * 0.28;
-        context.strokeStyle = "#42dff7";
-        context.lineWidth = 0.65;
-        context.stroke();
+        ambientContext.globalAlpha = ambientAlpha * 0.28;
+        ambientContext.strokeStyle = "#42dff7";
+        ambientContext.lineWidth = 0.65;
+        ambientContext.stroke();
       }
 
-      context.globalAlpha = 1;
+      glyphContext.globalAlpha = 1;
       for (const pale of [false, true]) {
-        context.beginPath();
+        glyphContext.beginPath();
         for (const particle of particles) {
           if (particle.ambient || particle.pale !== pale) continue;
           const targetX =
@@ -229,41 +236,40 @@ export default function SignalParticleField({
             particle.x += (dx / distance) * force;
             particle.y += (dy / distance) * force;
           }
-          context.rect(
+          glyphContext.rect(
             particle.x - particle.size,
             particle.y - particle.size,
             particle.size * 2,
             particle.size * 2,
           );
         }
-        context.globalAlpha = Math.max(0.82, ambientAlpha);
-        context.fillStyle = pale ? "#dcfaff" : "#00c8e8";
-        context.shadowColor = pale
-          ? "rgba(220, 250, 255, 0.72)"
-          : "rgba(0, 200, 232, 0.9)";
-        context.shadowBlur = 5;
-        context.fill();
+        glyphContext.globalAlpha = Math.max(0.82, ambientAlpha);
+        glyphContext.fillStyle = pale ? "#dcfaff" : "#00c8e8";
+        glyphContext.shadowColor = "transparent";
+        glyphContext.shadowBlur = 0;
+        glyphContext.fill();
       }
 
       for (const pale of [false, true]) {
-        context.beginPath();
+        ambientContext.beginPath();
         for (const particle of particles) {
           if (!particle.ambient || particle.pale !== pale) continue;
-          context.rect(
+          ambientContext.rect(
             particle.x - particle.size,
             particle.y - particle.size,
             particle.size * 2,
             particle.size * 2,
           );
         }
-        context.globalAlpha = ambientAlpha * 0.86;
-        context.fillStyle = pale ? "#d7f7fb" : "#00c8e8";
-        context.shadowColor = "rgba(0, 200, 232, 0.9)";
-        context.shadowBlur = 4;
-        context.fill();
+        ambientContext.globalAlpha = ambientAlpha * 0.86;
+        ambientContext.fillStyle = pale ? "#d7f7fb" : "#00c8e8";
+        ambientContext.shadowColor = "rgba(0, 200, 232, 0.9)";
+        ambientContext.shadowBlur = 4;
+        ambientContext.fill();
       }
-      context.shadowBlur = 0;
-      context.globalAlpha = 1;
+      ambientContext.shadowBlur = 0;
+      ambientContext.globalAlpha = 1;
+      glyphContext.globalAlpha = 1;
     };
 
     const tick = (now: number) => {
@@ -282,7 +288,7 @@ export default function SignalParticleField({
     };
 
     const trackPointer = (event: PointerEvent) => {
-      const bounds = canvas.getBoundingClientRect();
+      const bounds = glyphCanvas.getBoundingClientRect();
       pointerX = event.clientX - bounds.left;
       pointerY = event.clientY - bounds.top;
     };
@@ -294,7 +300,8 @@ export default function SignalParticleField({
       createParticles();
       if (reducedMotion.matches) draw(performance.now());
     });
-    resizeObserver.observe(canvas);
+    resizeObserver.observe(ambientCanvas);
+    resizeObserver.observe(glyphCanvas);
     window.addEventListener("pointermove", trackPointer, { passive: true });
     document.addEventListener("visibilitychange", syncMotion);
     reducedMotion.addEventListener("change", syncMotion);
@@ -309,10 +316,17 @@ export default function SignalParticleField({
   }, [intro]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="signal-particle-canvas"
-      aria-hidden="true"
-    />
+    <>
+      <canvas
+        ref={ambientCanvasRef}
+        className="signal-ambient-canvas"
+        aria-hidden="true"
+      />
+      <canvas
+        ref={glyphCanvasRef}
+        className="signal-glyph-canvas"
+        aria-hidden="true"
+      />
+    </>
   );
 }
