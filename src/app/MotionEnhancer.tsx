@@ -29,7 +29,49 @@ export default function MotionEnhancer() {
         const cleanups: (() => void)[] = [];
         const heroItems = "#main-hero [data-hero-enter]";
         const lenis = new Lenis({ anchors: true, lerp: 0.1 });
-        const updateScroll = () => ScrollTrigger.update();
+        let headerHidden = window.scrollY >= 80;
+        if (header) {
+          header.classList.toggle("is-visible", !headerHidden);
+          gsap.set(header, {
+            autoAlpha: headerHidden ? 0 : 1,
+            yPercent: headerHidden ? -140 : 0,
+          });
+        }
+
+        const setHeaderVisible = (visible: boolean) => {
+          if (!header || header.querySelector<HTMLDetailsElement>(".mobile-menu")?.open) {
+            return;
+          }
+
+          const shouldHide = !visible;
+          if (shouldHide === headerHidden) return;
+          headerHidden = shouldHide;
+
+          if (visible) {
+            header.classList.add("is-visible");
+            gsap.to(header, {
+              autoAlpha: 1,
+              yPercent: 0,
+              duration: 0.35,
+              ease: "power3.out",
+              overwrite: "auto",
+            });
+          } else {
+            header.classList.remove("is-visible");
+            gsap.to(header, {
+              autoAlpha: 0,
+              yPercent: -140,
+              duration: 0.3,
+              ease: "power2.in",
+              overwrite: "auto",
+            });
+          }
+        };
+
+        const updateScroll = (instance: Lenis) => {
+          ScrollTrigger.update();
+          setHeaderVisible(instance.scroll < 80);
+        };
         const raf = (time: number) => lenis.raf(time * 1000);
         lenis.on("scroll", updateScroll);
         gsap.ticker.add(raf);
@@ -44,65 +86,6 @@ export default function MotionEnhancer() {
           autoAlpha: 0,
           filter: "blur(6px)",
         });
-
-        if (header) {
-          const navTimeline = gsap
-            .timeline({ paused: true, defaults: { ease: "power3.out" } })
-            .fromTo(
-              header,
-              {
-                autoAlpha: 0,
-                scale: 0.97,
-                y: -12,
-              },
-              {
-                autoAlpha: 1,
-                scale: 1,
-                y: 0,
-                duration: 0.55,
-                ease: "power3.out",
-                onStart: () => header.classList.add("is-visible"),
-              },
-            )
-            .from(
-              ".site-header .brand",
-              {
-                x: -12,
-                autoAlpha: 0,
-                duration: 0.32,
-                ease: "power2.out",
-              },
-              "-=0.28",
-            )
-            .from(
-              "[data-nav-item]",
-              {
-                y: 9,
-                autoAlpha: 0,
-                duration: 0.28,
-                stagger: 0.045,
-                ease: "power2.out",
-              },
-              "-=0.34",
-            )
-            .from(
-              ".header-utilities > *",
-              {
-                y: 7,
-                autoAlpha: 0,
-                duration: 0.28,
-                stagger: 0.07,
-                ease: "power2.out",
-              },
-              "-=0.22",
-            );
-
-          const navEntrance = window.setTimeout(() => navTimeline.play(), 2550);
-          cleanups.push(() => {
-            window.clearTimeout(navEntrance);
-            navTimeline.kill();
-          });
-        }
 
         const heroEntrance = window.setTimeout(() => {
           gsap.to(heroItems, {
