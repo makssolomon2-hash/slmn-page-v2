@@ -42,6 +42,10 @@ export default function HeroWorld({ intro = false }: { intro?: boolean }) {
         "--background-blur",
         `${(2 + 30 * progress).toFixed(1)}px`,
       );
+      background.style.setProperty(
+        "--glyph-blur",
+        `${(10 * progress).toFixed(1)}px`,
+      );
     };
 
     window.addEventListener("pointermove", moveGlow, { passive: true });

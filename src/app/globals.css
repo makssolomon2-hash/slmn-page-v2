@@ -1656,8 +1656,9 @@ body {
 
 .signal-glyph-canvas {
   z-index: 2;
-  filter: none !important;
-  will-change: opacity;
+  filter: blur(var(--glyph-blur, 0px));
+  transition: filter 140ms linear;
+  will-change: filter, opacity;
 }
 
 .hero-world-shade {
