@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 export default function MotionEnhancer() {
   useEffect(() => {
@@ -13,7 +14,6 @@ export default function MotionEnhancer() {
       const header = document.querySelector<HTMLElement>(".site-header");
 
       motion.add("(prefers-reduced-motion: reduce)", () => {
-        const triggers: ScrollTrigger[] = [];
         if (header) {
           gsap.set(header, { autoAlpha: 1 });
           header.classList.add("is-visible");
@@ -23,30 +23,22 @@ export default function MotionEnhancer() {
           y: 0,
           filter: "none",
         });
-        const background = document.querySelector(".hero-world-background");
-        if (background) {
-          triggers.push(
-            ScrollTrigger.create({
-              trigger: "#opening",
-              start: "bottom top",
-              toggleClass: {
-                targets: background,
-                className: "is-softened",
-              },
-            }),
-            ScrollTrigger.create({
-              trigger: "#main-hero",
-              start: "bottom top",
-              toggleClass: { targets: background, className: "is-out" },
-            }),
-          );
-        }
-        return () => triggers.forEach((trigger) => trigger.kill());
       });
 
       motion.add("(prefers-reduced-motion: no-preference)", () => {
         const cleanups: (() => void)[] = [];
         const heroItems = "#main-hero [data-hero-enter]";
+        const lenis = new Lenis({ anchors: true, lerp: 0.1 });
+        const updateScroll = () => ScrollTrigger.update();
+        const raf = (time: number) => lenis.raf(time * 1000);
+        lenis.on("scroll", updateScroll);
+        gsap.ticker.add(raf);
+        cleanups.push(() => {
+          gsap.ticker.remove(raf);
+          lenis.off("scroll", updateScroll);
+          lenis.destroy();
+        });
+
         gsap.set(heroItems, {
           y: 38,
           autoAlpha: 0,
@@ -105,7 +97,7 @@ export default function MotionEnhancer() {
               "-=0.22",
             );
 
-          const navEntrance = window.setTimeout(() => navTimeline.play(), 2050);
+          const navEntrance = window.setTimeout(() => navTimeline.play(), 2550);
           cleanups.push(() => {
             window.clearTimeout(navEntrance);
             navTimeline.kill();
@@ -122,37 +114,8 @@ export default function MotionEnhancer() {
             ease: "power3.out",
             overwrite: "auto",
           });
-        }, 2200);
+        }, 2750);
         cleanups.push(() => window.clearTimeout(heroEntrance));
-
-        gsap.fromTo(
-          ".hero-world-background",
-          { filter: "blur(0px)", opacity: 1, scale: 1 },
-          {
-            filter: "blur(10px)",
-            opacity: 0.62,
-            scale: 1.04,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#opening",
-              start: "top top",
-              end: "bottom top",
-              scrub: 0.8,
-            },
-          },
-        );
-
-        gsap.to(".hero-world-background", {
-          filter: "blur(14px)",
-          opacity: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "#main-hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.9,
-          },
-        });
 
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
           gsap.fromTo(

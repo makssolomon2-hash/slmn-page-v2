@@ -1,37 +1,18 @@
 import MotionEnhancer from "@/app/MotionEnhancer";
 import ClerkNavActions from "@/components/ui/clerk-nav-actions";
 import HeroWorld from "@/components/ui/hero-world";
+import { archivePosts } from "@/data/archive";
 
-const projects = [
-  {
-    number: "01",
-    title: "Portfolio Website",
-    description: "An expressive product landing page, inspired by the clarity of Apple.",
-    stack: "REACT · VITE · TAILWIND · GSAP · THREE.JS",
-    href: "https://github.com/makssolomon2-hash/nextjs-ts-portfolio",
-  },
-  {
-    number: "02",
-    title: "MacBook Landing",
-    description: "A responsive product story built around motion and visual detail.",
-    stack: "REACT · VITE · TAILWIND · GSAP · THREE.JS",
-    href: "https://github.com/makssolomon2-hash/macbook-landing",
-  },
-  {
-    number: "03",
-    title: "Mobbin Remake",
-    description: "A clean interface study focused on modern layout patterns.",
-    stack: "NEXT.JS · REACT · TAILWIND",
-    href: "https://github.com/makssolomon2-hash/mobbin-remake",
-  },
-  {
-    number: "04",
-    title: "DJ-Digger Web UI",
-    description: "A music-discovery interface for DJs, with considered transitions.",
-    stack: "REACT · GSAP · TAILWIND",
-    href: "https://github.com/makssolomon2-hash/dj-digger-ui",
-  },
+const featuredProjectSlugs = [
+  "portfolio-website",
+  "macbook-landing",
+  "mobbin-remake",
+  "dj-digger-web-ui",
 ];
+const projects = featuredProjectSlugs
+  .map((slug) => archivePosts.find((project) => project.slug === slug))
+  .filter((project) => project !== undefined)
+  .map((project, index) => ({ ...project, number: String(index + 1).padStart(2, "0") }));
 
 const skills = [
   "JavaScript",
@@ -78,9 +59,9 @@ export default function Home() {
           Skip intro
         </a>
 
-        <HeroWorld />
+        <HeroWorld intro />
 
-        <section className="opening" id="opening" aria-label="SLMN pixel animation">
+        <section className="opening" id="opening" aria-label="SLMN particle animation">
           <a className="opening-scroll" href="#main-content" aria-label="Scroll to enter">
             <span />
           </a>
@@ -242,8 +223,8 @@ export default function Home() {
                 </h2>
               </div>
               <p className="section-intro">
-                Personal projects and interface experiments. Each link opens its
-                source repository.
+                Personal projects and interface experiments. Open a project to
+                see its overview and repository link.
               </p>
             </div>
             <div className="project-list">
@@ -251,17 +232,15 @@ export default function Home() {
                 <a
                   className="project-row"
                   data-reveal
-                  href={project.href}
-                  key={project.number}
-                  rel="noreferrer"
-                  target="_blank"
+                  href={`/projects/${project.slug}`}
+                  key={project.slug}
                 >
                   <span className="project-number">{project.number}</span>
                   <div className="project-copy">
                     <h3>{project.title}</h3>
                     <p>{project.description}</p>
                   </div>
-                  <span className="project-stack">{project.stack}</span>
+                  <span className="project-stack">{project.stack.join(" · ").toUpperCase()}</span>
                   <span className="project-link" aria-hidden="true">
                     <ArrowIcon diagonal />
                   </span>
@@ -393,9 +372,11 @@ export default function Home() {
             <div className="footer-column">
               <span>ELSEWHERE</span>
               <a href="https://github.com/makssolomon2-hash" target="_blank" rel="noreferrer">
+                <span className="footer-social-icon"><SocialIcon kind="github" /></span>
                 GitHub <ArrowIcon diagonal />
               </a>
               <a href="https://discord.com" target="_blank" rel="noreferrer">
+                <span className="footer-social-icon"><SocialIcon kind="discord" /></span>
                 Discord <ArrowIcon diagonal />
               </a>
             </div>

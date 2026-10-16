@@ -1,50 +1,77 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import PixelFlowField from "@/components/ui/pixel-flow-field";
+import { useEffect, useRef } from "react";
+import SignalParticleField from "@/components/ui/signal-particle-field";
 
-export default function HeroWorld() {
-  const [active, setActive] = useState(true);
+const progressBetween = (value: number, start: number, end: number) =>
+  Math.max(0, Math.min(1, (value - start) / Math.max(end - start, 1)));
+
+export default function HeroWorld({ intro = false }: { intro?: boolean }) {
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const sections = ["#opening", "#main-hero"]
-      .map((selector) => document.querySelector(selector))
-      .filter((section): section is Element => section !== null);
-    const visibility = new Map<Element, boolean>();
+    const background = backgroundRef.current;
+    if (!background) return;
+    const hero = document.querySelector<HTMLElement>("#main-hero");
+    const projects = document.querySelector<HTMLElement>("#development");
+    const shade = background.querySelector<HTMLElement>(".hero-world-shade");
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) =>
-          visibility.set(entry.target, entry.isIntersecting),
-        );
-        setActive([...visibility.values()].some(Boolean));
-      },
-      { rootMargin: "80px 0px" },
-    );
+    let pointerFrame = 0;
+    let pointerX = window.innerWidth / 2;
+    let pointerY = window.innerHeight / 2;
+    const moveGlow = (event: PointerEvent) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame) return;
+      pointerFrame = requestAnimationFrame(() => {
+        pointerFrame = 0;
+        background.style.setProperty("--pointer-x", `${pointerX}px`);
+        background.style.setProperty("--pointer-y", `${pointerY}px`);
+      });
+    };
+    const updateShade = () => {
+      if (!(hero && projects && shade)) return;
 
-    sections.forEach((section) => {
-      visibility.set(section, false);
-      observer.observe(section);
-    });
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const heroStart = hero.offsetTop - viewportHeight;
+      const heroEnd = hero.offsetTop + hero.offsetHeight;
+      const projectsStart = projects.offsetTop - viewportHeight;
+      const projectsEnd = projects.offsetTop;
+      const pageEnd = Math.max(
+        projectsEnd,
+        document.documentElement.scrollHeight - viewportHeight,
+      );
 
-    return () => observer.disconnect();
+      let opacity = 0.14 * progressBetween(scrollY, heroStart, heroEnd);
+      if (scrollY >= projectsStart) {
+        opacity =
+          0.14 + 0.14 * progressBetween(scrollY, projectsStart, projectsEnd);
+      }
+      if (scrollY >= projectsEnd) {
+        opacity =
+          0.28 + 0.14 * progressBetween(scrollY, projectsEnd, pageEnd);
+      }
+      shade.style.opacity = opacity.toFixed(3);
+    };
+
+    window.addEventListener("pointermove", moveGlow, { passive: true });
+    window.addEventListener("scroll", updateShade, { passive: true });
+    window.addEventListener("resize", updateShade);
+    updateShade();
+    return () => {
+      cancelAnimationFrame(pointerFrame);
+      window.removeEventListener("pointermove", moveGlow);
+      window.removeEventListener("scroll", updateShade);
+      window.removeEventListener("resize", updateShade);
+    };
   }, []);
 
   return (
-    <div className="hero-world-background" aria-hidden="true">
-      <PixelFlowField
-        className="hero-world-pixels"
-        cellSize={6}
-        colors={["#050607", "#00c8e8", "#d9fbff"]}
-        gap={4}
-        paused={!active}
-        pointerRadius={92}
-        pointerStrength={0.58}
-        pointerTracking="window"
-        speed={0.7}
-        text="SLMN"
-        weight={900}
-      />
+    <div className="hero-world-background" ref={backgroundRef} aria-hidden="true">
+      <div className="hero-world-glow" />
+      <SignalParticleField intro={intro} />
+      <div className="hero-world-shade" />
     </div>
   );
 }
