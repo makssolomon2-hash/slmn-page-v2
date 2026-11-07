@@ -69,13 +69,16 @@ export default function SignalParticleField({
       const glyphPoints: { x: number; y: number }[] = [];
 
       if (intro && shapeContext) {
-        const fontSize = Math.min(width * 0.6, height * 0.82, 600);
+        const mobile = width < 640;
+        const fontSize = mobile
+          ? Math.min(width * 0.78, height * 0.58, 360)
+          : Math.min(width * 0.45, height * 0.7, 500);
         shapeContext.clearRect(0, 0, width, height);
-        shapeContext.font = `900 ${fontSize}px Arial, sans-serif`;
+        shapeContext.font = `900 ${fontSize}px "Arial Black", Arial, sans-serif`;
         shapeContext.textAlign = "center";
         shapeContext.textBaseline = "middle";
         shapeContext.fillStyle = "#fff";
-        shapeContext.fillText("SLMN", width / 2, height / 2, width * 0.96);
+        shapeContext.fillText(mobile ? "S" : "SLMN", width / 2, height / 2, width * 0.78);
 
         const pixels = shapeContext.getImageData(
           0,

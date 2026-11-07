@@ -6,7 +6,13 @@ import SignalParticleField from "@/components/ui/signal-particle-field";
 const progressBetween = (value: number, start: number, end: number) =>
   Math.max(0, Math.min(1, (value - start) / Math.max(end - start, 1)));
 
-export default function HeroWorld({ intro = false }: { intro?: boolean }) {
+export default function HeroWorld({
+  intro = false,
+  dimmed = false,
+}: {
+  intro?: boolean;
+  dimmed?: boolean;
+}) {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -66,6 +72,7 @@ export default function HeroWorld({ intro = false }: { intro?: boolean }) {
       <div className="hero-world-glow" />
       <SignalParticleField intro={intro} />
       <div className="hero-world-shade" />
+      {dimmed && <div className="hero-world-dim" />}
     </div>
   );
 }

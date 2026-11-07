@@ -6,7 +6,7 @@ import SectionHeading from "@/components/ui/section-heading";
 
 export default function ProjectsSection() {
   return (
-    <section className="border-y border-white/10 bg-black/70 py-24 sm:py-32" id="development">
+    <section className="border-y border-white/10 bg-[var(--ambient-veil)] py-24 sm:py-32" id="development">
       <div className="mx-auto w-[calc(100%-48px)] max-w-[1160px]">
         <SectionHeading
           description="Personal projects and interface experiments. Open a project to see its overview and repository link."
@@ -24,7 +24,7 @@ export default function ProjectsSection() {
               href={`/projects/${project.slug}`}
               key={project.slug}
             >
-              <div aria-hidden="true" className="relative flex aspect-[1.85] items-center justify-center overflow-hidden border-b border-white/10 bg-[radial-gradient(ellipse_at_50%_100%,rgba(0,200,232,0.09),transparent_65%),#0c0c0c]">
+              <div aria-hidden="true" className="relative flex aspect-[1.85] items-center justify-center overflow-hidden border-b border-white/10 bg-black">
                 {project.screenshot ? (
                   <Image alt="" className="object-cover object-top transition duration-500 group-hover:scale-[1.03]" fill sizes="(max-width: 639px) 100vw, (max-width: 1208px) 50vw, 572px" src={project.screenshot.src} />
                 ) : (

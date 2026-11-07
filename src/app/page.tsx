@@ -27,9 +27,11 @@ export default function Home() {
         <SiteHeader />
         <main id="main-content">
           <HomeHero />
-          <div className="bg-black/95">
+          <div className="bg-[var(--ambient-veil)]">
             <AboutSection />
-            <ProjectsSection />
+          </div>
+          <ProjectsSection />
+          <div className="bg-[var(--ambient-veil)]">
             <SkillsSection />
             <MusicSection />
             <LearningSection />

@@ -97,6 +97,7 @@ export const archivePosts: ArchivePost[] = [
     stack: ["React", "Vite", "Tailwind", "GSAP", "Three.js"],
     repository: "nextjs-ts-portfolio",
     cover: "index",
+    screenshot: { src: "/projects/portfolio-website.png", alt: "Portfolio website showing a laptop with an Earth-themed design and an about section" },
     channels: ["code"],
   },
 ];

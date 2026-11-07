@@ -1,18 +1,36 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { Suspense } from "react";
+import Image from "next/image";
 import MotionEnhancer from "@/components/layout/motion-enhancer";
 import SiteFooter from "@/components/layout/site-footer";
 import SiteHeader from "@/components/layout/site-header";
 import ActionLink from "@/components/ui/action-link";
+import HeroWorld from "@/components/ui/hero-world";
 import SoundCloudLinks from "@/components/ui/soundcloud-links";
+import SoundCloudPlayers from "@/components/ui/soundcloud-players";
 import { ArrowIcon } from "@/components/ui/icons";
 import { featuredProjects } from "@/data/portfolio";
 import type { PlatformPage as PlatformPageData } from "@/data/platform-pages";
 
-export default function PlatformPage({ page, showProjects = false, showSoundcloud = false }: { page: PlatformPageData; showProjects?: boolean; showSoundcloud?: boolean }) {
+type PlatformPageProps = { page: PlatformPageData; showProjects?: boolean; showSoundcloud?: boolean };
+
+export default function PlatformPage(props: PlatformPageProps) {
+  return (
+    <Suspense fallback={<div className="grid min-h-screen place-items-center bg-black text-sm text-slate-400">Checking your account…</div>}>
+      <ProtectedPlatformPage {...props} />
+    </Suspense>
+  );
+}
+
+async function ProtectedPlatformPage({ page, showProjects = false, showSoundcloud = false }: PlatformPageProps) {
+  await auth.protect();
+
   return (
     <>
       <MotionEnhancer />
-      <div className="site-shell min-h-screen bg-black" id="top">
+      <div className="site-shell min-h-screen" id="top">
+        <HeroWorld dimmed />
         <a className="fixed left-3 top-3 z-50 -translate-y-[150%] rounded-md bg-cyan-400 px-4 py-3 text-sm font-bold text-slate-950 focus:translate-y-0 focus:outline-2 focus:outline-offset-4 focus:outline-cyan-300" href="#main-content">
           Skip to content
         </a>
@@ -35,6 +53,7 @@ export default function PlatformPage({ page, showProjects = false, showSoundclou
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl" id="soundcloud-title">Music I make. Sets I play.</h2>
               <p className="mb-6 mt-4 max-w-[540px] text-sm leading-7 text-slate-400">Visit my SoundCloud profiles for music and DJ sets. Nothing plays automatically here.</p>
               <SoundCloudLinks />
+              <SoundCloudPlayers />
             </section>
           )}
 
@@ -67,7 +86,14 @@ export default function PlatformPage({ page, showProjects = false, showSoundclou
               <div className="mt-8 border-t border-white/10">
                 {featuredProjects.map((project) => (
                   <Link className="group flex items-center justify-between gap-5 border-b border-white/10 py-5 transition-colors hover:bg-white/[0.03]" href={`/projects/${project.slug}`} key={project.slug}>
-                    <span><span className="mr-4 text-[10px] text-cyan-300">{project.number}</span><span className="text-sm font-semibold text-white sm:text-base">{project.title}</span></span>
+                    <span className="flex min-w-0 items-center gap-4 sm:gap-6">
+                      <span aria-hidden="true" className="relative block aspect-[1.85] w-24 shrink-0 overflow-hidden rounded-md border border-white/10 bg-white/[0.03] sm:w-40">
+                        {project.screenshot && (
+                          <Image alt="" className="object-cover object-top transition duration-500 group-hover:scale-[1.03]" fill sizes="(max-width: 639px) 96px, 160px" src={project.screenshot.src} />
+                        )}
+                      </span>
+                      <span><span className="mr-4 text-[10px] text-cyan-300">{project.number}</span><span className="text-sm font-semibold text-white sm:text-base">{project.title}</span></span>
+                    </span>
                     <ArrowIcon diagonal className="size-4 shrink-0 text-slate-400 transition-colors group-hover:text-white" />
                   </Link>
                 ))}

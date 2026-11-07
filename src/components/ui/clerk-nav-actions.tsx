@@ -26,12 +26,12 @@ export default function ClerkNavActions({
         {mobile ? (
           <>
             <DropdownMenuItem asChild><Link href="/sign-in">Sign in</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild><Link href="/sign-up">Create account</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link className="bg-cyan-400 !text-slate-950 focus:bg-cyan-300 focus:!text-slate-950" href="/sign-up">Create account</Link></DropdownMenuItem>
           </>
         ) : (
           <>
             <Link className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "text-[11px]")} href="/sign-in">Sign in</Link>
-            <Link className={cn(buttonVariants({ variant: "outline", size: "sm" }), "text-[11px]")} href="/sign-up">Create account</Link>
+            <Link className={cn(buttonVariants({ variant: "default", size: "sm" }), "text-[11px]")} href="/sign-up">Create account</Link>
           </>
         )}
       </Show>

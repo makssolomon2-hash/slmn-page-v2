@@ -7,7 +7,7 @@ export default function HomeHero() {
       className="relative grid min-h-[min(830px,calc(100svh-74px))] place-items-center overflow-hidden px-5 py-24 text-center"
       id="main-hero"
     >
-      <div className="absolute inset-0 bg-black" />
+      <div className="absolute inset-0 bg-[var(--ambient-veil)]" />
       <div className="relative z-[1] mx-auto w-full max-w-[900px]">
         <p className="mb-7 flex items-center justify-center gap-2.5 text-[8px] font-semibold tracking-[0.13em] text-cyan-50/80 sm:text-[10px]" data-hero-enter>
           <span aria-hidden="true" className="size-[7px] rounded-full bg-cyan-300 shadow-[0_0_13px_rgba(0,200,232,0.5)]" />

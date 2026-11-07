@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 
 export default function ProjectDetail({ project }: { project: ArchivePost }) {
   return (
-    <div className="relative min-h-screen">
-      <HeroWorld />
+    <div className="relative isolate min-h-screen">
+      <HeroWorld dimmed />
       <main className="relative z-[1] mx-auto min-h-screen w-[calc(100%-32px)] max-w-[1160px] sm:w-[calc(100%-48px)]">
         <header className="flex min-h-[72px] items-center justify-between gap-4 border-b border-white/10 sm:min-h-[92px]">
           <BrandLink href="/" />
@@ -70,11 +70,13 @@ export default function ProjectDetail({ project }: { project: ArchivePost }) {
           </a>
         </section>
 
-        <footer className="flex min-h-[62px] items-center justify-between gap-4 border-t border-white/10 text-[8px] tracking-[0.1em] text-slate-500">
+      </main>
+      <footer className="relative z-[1] bg-black">
+        <div className="mx-auto flex min-h-[62px] w-[calc(100%-32px)] max-w-[1160px] items-center justify-between gap-4 border-t border-white/10 text-[8px] tracking-[0.1em] text-slate-500 sm:w-[calc(100%-48px)]">
           <span>© 2026 MAKS SOLOMON</span>
           <Link className={cn(buttonVariants({ variant: "link" }), "text-[8px] tracking-[0.1em]")} href="/#development">BACK TO SELECTED WORK ↑</Link>
-        </footer>
-      </main>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -9,6 +9,7 @@
   --accent: #00c8e8;
   --accent-bright: #17d9f4;
   --content-width: 1160px;
+  --ambient-veil: rgb(0 0 0 / 76%);
 }
 
 @theme inline {
@@ -178,6 +179,13 @@ summary:focus-visible {
   opacity: 0;
   pointer-events: none;
   will-change: opacity;
+}
+
+.hero-world-dim {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  background: var(--ambient-veil);
 }
 
 @keyframes pixel-ambient-drift {

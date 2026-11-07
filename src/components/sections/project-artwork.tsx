@@ -10,7 +10,7 @@ export default function ProjectArtwork({ cover, title }: ProjectArtworkProps) {
   return (
     <div
       aria-label={`${title} visual preview`}
-      className="relative mt-10 grid min-h-[300px] place-items-center overflow-hidden rounded-lg border border-cyan-100/15 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,171,202,0.14),transparent_50%),linear-gradient(135deg,rgba(14,26,32,0.84),rgba(5,7,8,0.94))] sm:mt-14 sm:min-h-[480px]"
+      className="relative mt-10 grid min-h-[300px] place-items-center overflow-hidden rounded-lg border border-white/10 bg-black sm:mt-14 sm:min-h-[480px]"
       role="img"
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(156,227,239,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(156,227,239,0.035)_1px,transparent_1px)] bg-[size:38px_38px] [mask-image:radial-gradient(ellipse_at_center,#000_15%,transparent_80%)]" />

@@ -1,6 +1,17 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+const publicRoutePrefixes = ["/projects", "/sign-in", "/sign-up"];
+
+export default clerkMiddleware(async (auth, request) => {
+  const { pathname } = request.nextUrl;
+  const isPublicRoute =
+    pathname === "/" ||
+    publicRoutePrefixes.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    );
+
+  if (!isPublicRoute) await auth.protect();
+});
 
 export const config = {
   matcher: [

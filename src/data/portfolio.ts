@@ -10,8 +10,8 @@ export const navigationItems = [
 ] as const;
 
 export const soundcloudProfiles = [
-  { label: "SLMN on SoundCloud", href: "https://soundcloud.com/slmn-895944364", shortLabel: "SLMN profile" },
-  { label: "Second SoundCloud profile", href: "https://soundcloud.com/user-104929278-437155238", shortLabel: "Second profile" },
+  { label: "SLMN on SoundCloud", href: "https://soundcloud.com/slmn-895944364", shortLabel: "SLMN profile", embedUserId: "1750276809" },
+  { label: "Second SoundCloud profile", href: "https://soundcloud.com/user-104929278-437155238", shortLabel: "Second profile", embedUserId: "570046656" },
 ] as const;
 
 export const socialLinks = [

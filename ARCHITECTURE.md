@@ -14,10 +14,19 @@ The main navigation routes live under `src/app` (`development`, `music`,
 `src/components/sections/platform-page.tsx`. The homepage keeps its existing
 sections and anchor links.
 
+Clerk protects non-public routes in `src/proxy.ts` and the shared platform page
+checks authentication again on the server. The homepage, project cases, sign-in,
+and sign-up routes remain public. New protected pages and APIs must still check
+authorization where their data is accessed.
+
 Project screenshot paths and alt text are maintained with each project in
 `src/data/archive.ts`; the supplied assets live in `public/projects`.
 SoundCloud profile links are maintained in `src/data/portfolio.ts` and are
 shared by the navigation, music sections, and footer.
+The SoundCloud player user IDs come from SoundCloud's profile embed response;
+players load only after a visitor chooses to load them and never autoplay.
+The music visual loads Three.js when it approaches the viewport and provides a
+static fallback when WebGL is unavailable.
 
 ## File Structure
 

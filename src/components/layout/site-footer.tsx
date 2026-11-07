@@ -16,7 +16,7 @@ const footerLinks = [
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-black/95 backdrop-blur-xl" data-site-footer>
+    <footer className="border-t border-white/10 bg-black backdrop-blur-xl" data-site-footer>
       <div
         className="mx-auto grid w-[calc(100%-48px)] max-w-[1160px] grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto] lg:gap-32 lg:py-14"
         data-footer-main
