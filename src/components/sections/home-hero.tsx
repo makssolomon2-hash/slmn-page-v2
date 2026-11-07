@@ -7,13 +7,13 @@ export default function HomeHero() {
       className="relative grid min-h-[min(830px,calc(100svh-74px))] place-items-center overflow-hidden px-5 py-24 text-center"
       id="main-hero"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,8,0.08),rgba(5,7,8,0.46)_72%)]" />
+      <div className="absolute inset-0 bg-black" />
       <div className="relative z-[1] mx-auto w-full max-w-[900px]">
         <p className="mb-7 flex items-center justify-center gap-2.5 text-[8px] font-semibold tracking-[0.13em] text-cyan-50/80 sm:text-[10px]" data-hero-enter>
           <span aria-hidden="true" className="size-[7px] rounded-full bg-cyan-300 shadow-[0_0_13px_rgba(0,200,232,0.5)]" />
           FRONTEND DEVELOPER · CREATIVE IN PROGRESS
         </p>
-        <h1 className="text-[54px] font-bold leading-[0.96] text-slate-50 sm:text-[76px] lg:text-[96px] xl:text-[118px]" data-hero-enter id="hero-title">
+        <h1 className="text-[clamp(2.8rem,9vw,4.4rem)] font-extrabold leading-[0.99] tracking-[-0.045em] text-slate-50 sm:text-[64px] lg:text-[82px] xl:text-[94px]" data-hero-enter id="hero-title">
           Building for the
           <br />
           <span className="text-cyan-300">screen &amp; sound.</span>

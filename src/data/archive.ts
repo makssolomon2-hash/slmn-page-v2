@@ -8,6 +8,7 @@ export type ArchivePost = {
   stack: string[];
   repository: string;
   cover: "orbit" | "grid" | "glass" | "moon" | "signal" | "index";
+  screenshot?: { src: string; alt: string };
   channels: ArchiveChannel[];
 };
 
@@ -30,6 +31,7 @@ export const archivePosts: ArchivePost[] = [
     stack: ["React", "GSAP", "Tailwind"],
     repository: "dj-digger-ui",
     cover: "signal",
+    screenshot: { src: "/projects/dj-digger-ui.jpeg", alt: "DJ-Digger interface showing playlists, tracks, and a waveform" },
     channels: ["code", "sound"],
   },
   {
@@ -51,6 +53,7 @@ export const archivePosts: ArchivePost[] = [
     stack: ["React", "GSAP", "Tailwind"],
     repository: "cloudy",
     cover: "glass",
+    screenshot: { src: "/projects/cloudy.png", alt: "Cloudy messenger interface in dark mode" },
     channels: ["code"],
   },
   {
@@ -61,6 +64,7 @@ export const archivePosts: ArchivePost[] = [
     stack: ["React", "Vite", "GSAP", "Three.js"],
     repository: "macbook-landing",
     cover: "orbit",
+    screenshot: { src: "/projects/macbook-landing.png", alt: "MacBook landing page with an illuminated product render" },
     channels: ["code"],
   },
   {
@@ -71,6 +75,18 @@ export const archivePosts: ArchivePost[] = [
     stack: ["Next.js", "React", "Tailwind"],
     repository: "mobbin-remake",
     cover: "grid",
+    screenshot: { src: "/projects/mobbin-remake.png", alt: "Mobbin-inspired design discovery landing page" },
+    channels: ["code"],
+  },
+  {
+    slug: "frontend-starter",
+    title: "FRONTEND STARTER",
+    category: "DEVELOPER TOOLS / STARTER",
+    description: "A frontend starter with React, Tailwind CSS, GSAP, and a Three.js preview.",
+    stack: ["React", "Vite", "Tailwind", "GSAP", "Three.js"],
+    repository: "front-end-starters",
+    cover: "orbit",
+    screenshot: { src: "/projects/frontend-starter.png", alt: "Frontend starter page showing its tool stack and a blue 3D sphere" },
     channels: ["code"],
   },
   {

@@ -27,12 +27,14 @@ export default function Home() {
         <SiteHeader />
         <main id="main-content">
           <HomeHero />
-          <AboutSection />
-          <ProjectsSection />
-          <SkillsSection />
-          <MusicSection />
-          <LearningSection />
-          <ContactSection />
+          <div className="bg-black/95">
+            <AboutSection />
+            <ProjectsSection />
+            <SkillsSection />
+            <MusicSection />
+            <LearningSection />
+            <ContactSection />
+          </div>
         </main>
         <SiteFooter />
       </div>

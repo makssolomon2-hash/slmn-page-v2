@@ -3,7 +3,7 @@
 
 :root {
   color-scheme: dark;
-  --page: #050607;
+  --page: #000;
   --text: #f4f6f7;
   --muted: #9ba2a7;
   --accent: #00c8e8;
@@ -38,10 +38,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-button,
-a {
-  color: inherit;
-  font: inherit;
+button {
+  font-family: inherit;
 }
 
 a {
@@ -49,9 +47,37 @@ a {
 }
 
 a:focus-visible,
+button:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
+}
+
+.brand-wordmark {
+  color: #f7f7f7;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.085em;
+  line-height: 1;
+}
+
+.brand-wordmark span {
+  color: var(--accent);
+}
+
+.brand-index {
+  border-left: 1px solid rgba(255, 255, 255, 0.24);
+  color: #8c9092;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  padding-left: 9px;
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 ::selection {
@@ -138,6 +164,7 @@ summary:focus-visible {
 
 .signal-glyph-canvas {
   z-index: 2;
+  opacity: var(--glyph-opacity, 0.9);
   filter: blur(var(--glyph-blur, 0px));
   transition: filter 140ms linear;
   will-change: filter, opacity;

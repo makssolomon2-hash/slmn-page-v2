@@ -1,11 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { featuredProjects } from "@/data/portfolio";
 import { ArrowIcon } from "@/components/ui/icons";
 import SectionHeading from "@/components/ui/section-heading";
 
 export default function ProjectsSection() {
   return (
-    <section className="border-y border-white/10 bg-black/35 py-24 sm:py-32" id="development">
+    <section className="border-y border-white/10 bg-black/70 py-24 sm:py-32" id="development">
       <div className="mx-auto w-[calc(100%-48px)] max-w-[1160px]">
         <SectionHeading
           description="Personal projects and interface experiments. Open a project to see its overview and repository link."
@@ -15,25 +16,46 @@ export default function ProjectsSection() {
           <br />
           <span className="text-cyan-300">I&apos;ve made.</span>
         </SectionHeading>
-        <div className="border-t border-white/20">
+        <div className="grid gap-4 sm:grid-cols-2">
           {featuredProjects.map((project) => (
             <Link
-              className="group grid min-h-[112px] grid-cols-[28px_minmax(0,1fr)_34px] items-center gap-3 border-b border-white/10 px-2 py-5 transition-colors hover:bg-white/[0.025] sm:grid-cols-[48px_minmax(220px,1.15fr)_minmax(180px,0.9fr)_36px] sm:gap-5 sm:px-4"
+              className="group overflow-hidden rounded-xl border border-white/10 bg-[#080808] transition-colors hover:border-white/30 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
               data-reveal
               href={`/projects/${project.slug}`}
               key={project.slug}
             >
-              <span className="text-[10px] tracking-[0.1em] text-cyan-300">{project.number}</span>
-              <div>
-                <h3 className="text-base font-semibold text-slate-100 sm:text-xl">{project.title}</h3>
-                <p className="mt-1.5 text-[11px] leading-5 text-slate-400 sm:text-xs">{project.description}</p>
+              <div aria-hidden="true" className="relative flex aspect-[1.85] items-center justify-center overflow-hidden border-b border-white/10 bg-[radial-gradient(ellipse_at_50%_100%,rgba(0,200,232,0.09),transparent_65%),#0c0c0c]">
+                {project.screenshot ? (
+                  <Image alt="" className="object-cover object-top transition duration-500 group-hover:scale-[1.03]" fill sizes="(max-width: 639px) 100vw, (max-width: 1208px) 50vw, 572px" src={project.screenshot.src} />
+                ) : (
+                  <>
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:32px_32px]" />
+                <div className="relative flex h-[68%] w-[75%] flex-col overflow-hidden rounded-md border border-white/15 bg-[#050505] shadow-2xl transition duration-500 group-hover:scale-[1.03]">
+                  <div className="flex h-7 shrink-0 items-center gap-1 border-b border-white/10 px-3">
+                    <span className="size-1 rounded-full bg-white/40" /><span className="size-1 rounded-full bg-white/20" /><span className="size-1 rounded-full bg-white/20" />
+                    <span className="ml-auto text-[7px] tracking-[0.1em] text-white/40">PROJECT / {project.number}</span>
+                  </div>
+                  <div className="flex flex-1 flex-col justify-center px-[10%]">
+                    <span className="text-[7px] tracking-[0.15em] text-cyan-300/80">DIGITAL EXPERIENCE</span>
+                    <span className="mt-2 max-w-[85%] text-[clamp(1rem,2.4vw,2rem)] font-bold leading-tight tracking-tight text-white/90">{project.title}</span>
+                    <span className="mt-3 h-px w-12 bg-cyan-300/70" />
+                  </div>
+                </div>
+                <span className="absolute bottom-3 right-3 text-[7px] tracking-[0.1em] text-white/35">CONCEPT PREVIEW</span>
+                  </>
+                )}
               </div>
-              <span className="col-start-2 row-start-2 text-[7px] leading-5 tracking-[0.08em] text-slate-500 sm:col-auto sm:row-auto sm:text-[8px]">
-                {project.stack.join(" · ").toUpperCase()}
-              </span>
-              <span aria-hidden="true" className="col-start-3 row-span-2 grid size-[34px] place-items-center rounded-full border border-white/20 text-slate-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:border-cyan-300 group-hover:text-cyan-300 sm:col-start-4 sm:row-auto">
-                <ArrowIcon diagonal className="size-[15px]" />
-              </span>
+              <div className="flex items-start justify-between gap-4 p-5 sm:p-6">
+                <div>
+                  <p className="text-[9px] tracking-[0.12em] text-slate-500">{project.number} / PERSONAL PROJECT</p>
+                  <h3 className="mt-2 text-lg font-semibold text-white sm:text-xl">{project.title}</h3>
+                  <p className="mt-2 max-w-[400px] text-xs leading-6 text-slate-400">{project.description}</p>
+                  <p className="mt-4 text-[9px] tracking-[0.06em] text-slate-500">{project.stack.join(" · ").toUpperCase()}</p>
+                </div>
+                <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-full border border-white/20 text-slate-300 transition group-hover:border-white/50 group-hover:text-white">
+                  <ArrowIcon diagonal className="size-[15px]" />
+                </span>
+              </div>
             </Link>
           ))}
         </div>

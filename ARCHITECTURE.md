@@ -1,5 +1,24 @@
 # 📊 Component Package Architecture & Navigation
 
+## Site interface components
+
+The site uses locally owned shadcn-style components in `src/components/ui`.
+`button.tsx` provides the shared button and link variants, and
+`dropdown-menu.tsx` wraps Radix for the keyboard-accessible mobile navigation.
+The shadcn configuration is in `components.json`; component styles can be
+customized directly without changing the existing particle intro.
+
+The main navigation routes live under `src/app` (`development`, `music`,
+`studio`, `learn`, `video`, and `about`). Their editable preview content is in
+`src/data/platform-pages.ts`, and their shared layout is
+`src/components/sections/platform-page.tsx`. The homepage keeps its existing
+sections and anchor links.
+
+Project screenshot paths and alt text are maintained with each project in
+`src/data/archive.ts`; the supplied assets live in `public/projects`.
+SoundCloud profile links are maintained in `src/data/portfolio.ts` and are
+shared by the navigation, music sections, and footer.
+
 ## File Structure
 
 ```

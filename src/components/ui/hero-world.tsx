@@ -37,15 +37,16 @@ export default function HeroWorld({ intro = false }: { intro?: boolean }) {
       const heroEnd = hero.offsetTop + hero.offsetHeight;
       const progress = progressBetween(scrollY, heroStart, heroEnd);
 
-      shade.style.opacity = (0.62 * progress).toFixed(3);
+      shade.style.opacity = (0.28 * progress).toFixed(3);
       background.style.setProperty(
         "--background-blur",
-        `${(2 + 30 * progress).toFixed(1)}px`,
+        `${(2 + 2 * progress).toFixed(1)}px`,
       );
       background.style.setProperty(
         "--glyph-blur",
-        `${(10 * progress).toFixed(1)}px`,
+        `${(2 * progress).toFixed(1)}px`,
       );
+      background.style.setProperty("--glyph-opacity", (1 - 0.7 * progress).toFixed(3));
     };
 
     window.addEventListener("pointermove", moveGlow, { passive: true });

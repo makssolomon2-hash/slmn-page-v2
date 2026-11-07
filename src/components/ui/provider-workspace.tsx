@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { Button } from "@/components/ui/button";
 
 type CatalogItem = {
   id: number;
@@ -125,9 +126,9 @@ export default function ProviderWorkspace() {
             <p aria-live="polite" className="m-0 max-w-[230px] text-[9px] leading-5 text-slate-400">
               {message || "Preview only. Your entries stay in this page and are not saved."}
             </p>
-            <button className="inline-flex min-h-9 items-center gap-2 rounded bg-cyan-300 px-3 text-[10px] font-bold text-slate-950 transition hover:bg-cyan-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300" type="submit">
+            <Button className="text-[10px]" size="sm" type="submit">
               Add to preview <span aria-hidden="true" className="text-base font-normal">+</span>
-            </button>
+            </Button>
           </div>
         </form>
 

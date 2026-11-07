@@ -2,19 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectDetail from "@/components/sections/project-detail";
 import { archivePosts } from "@/data/archive";
+import { featuredProjects } from "@/data/portfolio";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return archivePosts
-    .filter((project) =>
-      ["portfolio-website", "macbook-landing", "mobbin-remake", "dj-digger-web-ui"].includes(
-        project.slug,
-      ),
-    )
-    .map((project) => ({ slug: project.slug }));
+  return featuredProjects.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({

@@ -13,7 +13,7 @@ export default function LearningSection() {
         </p>
         <span className="mt-7 inline-block text-[8px] tracking-[0.13em] text-slate-400">ARTICLES &amp; VIDEO GUIDES / COMING SOON</span>
       </div>
-      <div className="min-h-[290px] rounded-[9px] border border-cyan-100/15 bg-[radial-gradient(ellipse_at_55%_25%,rgba(0,200,232,0.13),transparent_46%),linear-gradient(145deg,rgba(204,242,248,0.065),rgba(255,255,255,0.018))] p-6 shadow-[inset_0_1px_rgba(255,255,255,0.065),0_22px_65px_rgba(0,0,0,0.13)] backdrop-blur-xl sm:p-8" data-reveal id="video">
+      <div className="min-h-[290px] rounded-xl border border-white/10 bg-black/75 p-6 backdrop-blur-xl sm:p-8" data-reveal id="video">
         <span aria-hidden="true" className="mb-8 grid size-12 place-items-center rounded-full border border-cyan-300/40 text-xl text-cyan-300">+</span>
         <p className="text-[9px] font-bold tracking-[0.14em] text-cyan-300">VIDEO LIBRARY / PREVIEW</p>
         <h3 className="mt-3 text-xl font-semibold text-slate-50">A place for ideas in motion.</h3>

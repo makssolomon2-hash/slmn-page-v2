@@ -32,10 +32,7 @@ export default function MotionEnhancer() {
         }
 
         const setHeaderVisible = (visible: boolean) => {
-          if (
-            !header ||
-            header.querySelector<HTMLDetailsElement>("[data-mobile-menu]")?.open
-          ) {
+          if (!header || header.dataset.menuOpen === "true" || (!visible && header.matches(":focus-within"))) {
             return;
           }
 
@@ -53,7 +50,11 @@ export default function MotionEnhancer() {
 
         const updateScroll = (instance: Lenis) => {
           ScrollTrigger.update();
-          setHeaderVisible(instance.scroll < 80);
+          if (instance.scroll < 80 || instance.direction === -1) {
+            setHeaderVisible(true);
+          } else if (instance.direction === 1) {
+            setHeaderVisible(false);
+          }
         };
         const raf = (time: number) => lenis.raf(time * 1000);
         lenis.on("scroll", updateScroll);
@@ -64,19 +65,21 @@ export default function MotionEnhancer() {
           lenis.destroy();
         });
 
-        gsap.set(heroItems, { y: 38, autoAlpha: 0, filter: "blur(6px)" });
-        const heroEntrance = window.setTimeout(() => {
-          gsap.to(heroItems, {
-            y: 0,
-            autoAlpha: 1,
-            filter: "blur(0px)",
-            duration: 0.78,
-            stagger: 0.12,
-            ease: "power3.out",
-            overwrite: "auto",
-          });
-        }, 2750);
-        cleanups.push(() => window.clearTimeout(heroEntrance));
+        if (document.querySelector(heroItems)) {
+          gsap.set(heroItems, { y: 38, autoAlpha: 0, filter: "blur(6px)" });
+          const heroEntrance = window.setTimeout(() => {
+            gsap.to(heroItems, {
+              y: 0,
+              autoAlpha: 1,
+              filter: "blur(0px)",
+              duration: 0.78,
+              stagger: 0.12,
+              ease: "power3.out",
+              overwrite: "auto",
+            });
+          }, 2750);
+          cleanups.push(() => window.clearTimeout(heroEntrance));
+        }
 
         gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
           gsap.fromTo(
@@ -105,18 +108,6 @@ export default function MotionEnhancer() {
           },
         });
 
-        gsap.utils.toArray<HTMLAnchorElement>("[data-nav-target]").forEach((link) => {
-          const target = link.dataset.navTarget;
-          const section = target ? document.querySelector(target) : null;
-          if (!section) return;
-          ScrollTrigger.create({
-            trigger: section,
-            start: "top 45%",
-            end: "bottom 45%",
-            onToggle: (trigger) => link.classList.toggle("is-active", trigger.isActive),
-          });
-        });
-
         const magneticLinks = gsap.utils.toArray<HTMLElement>("[data-magnetic-link]");
         magneticLinks.forEach((link) => {
           const xTo = gsap.quickTo(link, "x", { duration: 0.32, ease: "power3.out" });
@@ -138,20 +129,6 @@ export default function MotionEnhancer() {
             gsap.killTweensOf(link);
           });
         });
-
-        const mobileMenu = document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
-        if (mobileMenu) {
-          const animateMenu = () => {
-            if (!mobileMenu.open) return;
-            gsap.fromTo(
-              "[data-mobile-nav] a",
-              { y: 8, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.035, ease: "power2.out" },
-            );
-          };
-          mobileMenu.addEventListener("toggle", animateMenu);
-          cleanups.push(() => mobileMenu.removeEventListener("toggle", animateMenu));
-        }
 
         return () => cleanups.forEach((cleanup) => cleanup());
       });

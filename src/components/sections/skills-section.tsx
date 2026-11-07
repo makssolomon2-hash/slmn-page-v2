@@ -2,7 +2,7 @@ import { skills } from "@/data/portfolio";
 
 export default function SkillsSection() {
   return (
-    <section className="border-b border-white/10 bg-[radial-gradient(ellipse_at_90%_40%,rgba(0,200,232,0.075),transparent_35%)] py-24 sm:py-32" id="studio">
+    <section className="border-b border-white/10 bg-black/50 py-24 sm:py-32" id="studio">
       <div className="mx-auto grid w-[calc(100%-48px)] max-w-[1160px] gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-16">
         <div data-reveal>
           <p className="text-[9px] font-bold tracking-[0.14em] text-cyan-300">02 / TOOLS &amp; PRACTICE</p>

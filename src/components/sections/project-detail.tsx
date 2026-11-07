@@ -1,7 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ArchivePost } from "@/data/archive";
 import HeroWorld from "@/components/ui/hero-world";
 import ProjectArtwork from "@/components/sections/project-artwork";
+import BrandLink from "@/components/ui/brand-link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function ProjectDetail({ project }: { project: ArchivePost }) {
   return (
@@ -9,11 +13,8 @@ export default function ProjectDetail({ project }: { project: ArchivePost }) {
       <HeroWorld />
       <main className="relative z-[1] mx-auto min-h-screen w-[calc(100%-32px)] max-w-[1160px] sm:w-[calc(100%-48px)]">
         <header className="flex min-h-[72px] items-center justify-between gap-4 border-b border-white/10 sm:min-h-[92px]">
-          <Link className="inline-flex items-center gap-2 text-[9px] font-bold tracking-[0.1em] sm:gap-3 sm:text-[11px]" href="/">
-            <span className="grid size-9 place-items-center rounded-full border border-cyan-300/40 text-[10px] tracking-normal text-cyan-300">MS</span>
-            <span>MAKS SOLOMON</span>
-          </Link>
-          <Link className="inline-flex items-center gap-2 text-[10px] text-slate-400 transition hover:text-cyan-200 sm:text-xs" href="/#development">
+          <BrandLink href="/" />
+          <Link className={cn(buttonVariants({ variant: "link" }), "gap-2 text-[10px] sm:text-xs")} href="/#development">
             <span aria-hidden="true" className="text-base text-cyan-300">←</span> All projects
           </Link>
         </header>
@@ -26,7 +27,13 @@ export default function ProjectDetail({ project }: { project: ArchivePost }) {
           <p className="mt-5 max-w-[620px] text-base leading-7 text-slate-400 sm:text-lg">
             {project.description}
           </p>
-          <ProjectArtwork cover={project.cover} title={project.title} />
+          {project.screenshot ? (
+            <div className="relative mt-10 aspect-[1.85] overflow-hidden rounded-lg border border-white/10 bg-[#080808] sm:mt-14">
+              <Image alt={project.screenshot.alt} className="object-contain" fill sizes="(max-width: 1208px) calc(100vw - 48px), 1160px" src={project.screenshot.src} />
+            </div>
+          ) : (
+            <ProjectArtwork cover={project.cover} title={project.title} />
+          )}
 
           <div className="grid gap-10 border-b border-white/10 py-12 sm:py-[70px] lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
             <div>
@@ -54,7 +61,7 @@ export default function ProjectDetail({ project }: { project: ArchivePost }) {
           </div>
 
           <a
-            className="mt-8 inline-flex min-h-12 items-center gap-5 rounded border border-cyan-300/40 bg-cyan-400/[0.08] px-5 text-[11px] text-cyan-50 transition hover:border-cyan-300 hover:bg-cyan-400/[0.16] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300"
+            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "mt-8 gap-5")}
             href={`https://github.com/makssolomon2-hash/${project.repository}`}
             rel="noreferrer"
             target="_blank"
@@ -65,7 +72,7 @@ export default function ProjectDetail({ project }: { project: ArchivePost }) {
 
         <footer className="flex min-h-[62px] items-center justify-between gap-4 border-t border-white/10 text-[8px] tracking-[0.1em] text-slate-500">
           <span>© 2026 MAKS SOLOMON</span>
-          <Link className="text-slate-300 transition hover:text-cyan-300" href="/#development">BACK TO SELECTED WORK ↑</Link>
+          <Link className={cn(buttonVariants({ variant: "link" }), "text-[8px] tracking-[0.1em]")} href="/#development">BACK TO SELECTED WORK ↑</Link>
         </footer>
       </main>
     </div>
