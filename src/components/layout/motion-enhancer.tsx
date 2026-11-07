@@ -11,27 +11,20 @@ export default function MotionEnhancer() {
 
     const context = gsap.context(() => {
       const motion = gsap.matchMedia();
-      const header = document.querySelector<HTMLElement>(".site-header");
+      const header = document.querySelector<HTMLElement>("[data-site-header]");
 
       motion.add("(prefers-reduced-motion: reduce)", () => {
-        if (header) {
-          gsap.set(header, { autoAlpha: 1 });
-          header.classList.add("is-visible");
-        }
-        gsap.set("#main-hero [data-hero-enter]", {
-          autoAlpha: 1,
-          y: 0,
-          filter: "none",
-        });
+        if (header) gsap.set(header, { autoAlpha: 1, yPercent: 0 });
+        gsap.set("[data-hero-enter]", { autoAlpha: 1, y: 0, filter: "none" });
       });
 
       motion.add("(prefers-reduced-motion: no-preference)", () => {
         const cleanups: (() => void)[] = [];
-        const heroItems = "#main-hero [data-hero-enter]";
+        const heroItems = "[data-hero-enter]";
         const lenis = new Lenis({ anchors: true, lerp: 0.1 });
         let headerHidden = window.scrollY >= 80;
+
         if (header) {
-          header.classList.toggle("is-visible", !headerHidden);
           gsap.set(header, {
             autoAlpha: headerHidden ? 0 : 1,
             yPercent: headerHidden ? -140 : 0,
@@ -39,33 +32,23 @@ export default function MotionEnhancer() {
         }
 
         const setHeaderVisible = (visible: boolean) => {
-          if (!header || header.querySelector<HTMLDetailsElement>(".mobile-menu")?.open) {
+          if (
+            !header ||
+            header.querySelector<HTMLDetailsElement>("[data-mobile-menu]")?.open
+          ) {
             return;
           }
 
           const shouldHide = !visible;
           if (shouldHide === headerHidden) return;
           headerHidden = shouldHide;
-
-          if (visible) {
-            header.classList.add("is-visible");
-            gsap.to(header, {
-              autoAlpha: 1,
-              yPercent: 0,
-              duration: 0.35,
-              ease: "power3.out",
-              overwrite: "auto",
-            });
-          } else {
-            header.classList.remove("is-visible");
-            gsap.to(header, {
-              autoAlpha: 0,
-              yPercent: -140,
-              duration: 0.3,
-              ease: "power2.in",
-              overwrite: "auto",
-            });
-          }
+          gsap.to(header, {
+            autoAlpha: visible ? 1 : 0,
+            yPercent: visible ? 0 : -140,
+            duration: visible ? 0.35 : 0.3,
+            ease: visible ? "power3.out" : "power2.in",
+            overwrite: "auto",
+          });
         };
 
         const updateScroll = (instance: Lenis) => {
@@ -81,12 +64,7 @@ export default function MotionEnhancer() {
           lenis.destroy();
         });
 
-        gsap.set(heroItems, {
-          y: 38,
-          autoAlpha: 0,
-          filter: "blur(6px)",
-        });
-
+        gsap.set(heroItems, { y: 38, autoAlpha: 0, filter: "blur(6px)" });
         const heroEntrance = window.setTimeout(() => {
           gsap.to(heroItems, {
             y: 0,
@@ -110,54 +88,39 @@ export default function MotionEnhancer() {
               duration: 0.72,
               ease: "power2.out",
               immediateRender: false,
-              scrollTrigger: {
-                trigger: element,
-                start: "top 88%",
-                once: true,
-              },
+              scrollTrigger: { trigger: element, start: "top 88%", once: true },
             },
           );
         });
 
-        gsap.from(".footer-main", {
+        gsap.from("[data-footer-main]", {
           y: 28,
           opacity: 0,
           duration: 0.8,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: ".site-footer",
+            trigger: "[data-site-footer]",
             start: "top 90%",
             once: true,
           },
         });
 
-        gsap.utils
-          .toArray<HTMLAnchorElement>("[data-nav-target]")
-          .forEach((link) => {
-            const target = link.dataset.navTarget;
-            const section = target ? document.querySelector(target) : null;
-            if (!section) return;
-            ScrollTrigger.create({
-              trigger: section,
-              start: "top 45%",
-              end: "bottom 45%",
-              onToggle: (trigger) =>
-                link.classList.toggle("is-active", trigger.isActive),
-            });
+        gsap.utils.toArray<HTMLAnchorElement>("[data-nav-target]").forEach((link) => {
+          const target = link.dataset.navTarget;
+          const section = target ? document.querySelector(target) : null;
+          if (!section) return;
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top 45%",
+            end: "bottom 45%",
+            onToggle: (trigger) => link.classList.toggle("is-active", trigger.isActive),
           });
+        });
 
-        const magneticLinks = gsap.utils.toArray<HTMLElement>(
-          ".desktop-nav a, .header-socials .social-link",
-        );
+        const magneticLinks = gsap.utils.toArray<HTMLElement>("[data-magnetic-link]");
         magneticLinks.forEach((link) => {
-          const xTo = gsap.quickTo(link, "x", {
-            duration: 0.32,
-            ease: "power3.out",
-          });
-          const yTo = gsap.quickTo(link, "y", {
-            duration: 0.32,
-            ease: "power3.out",
-          });
+          const xTo = gsap.quickTo(link, "x", { duration: 0.32, ease: "power3.out" });
+          const yTo = gsap.quickTo(link, "y", { duration: 0.32, ease: "power3.out" });
           const move = (event: PointerEvent) => {
             const bounds = link.getBoundingClientRect();
             xTo((event.clientX - bounds.left - bounds.width / 2) * 0.12);
@@ -176,26 +139,18 @@ export default function MotionEnhancer() {
           });
         });
 
-        const mobileMenu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
+        const mobileMenu = document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
         if (mobileMenu) {
           const animateMenu = () => {
             if (!mobileMenu.open) return;
             gsap.fromTo(
-              ".mobile-nav a",
+              "[data-mobile-nav] a",
               { y: 8, autoAlpha: 0 },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.28,
-                stagger: 0.035,
-                ease: "power2.out",
-              },
+              { y: 0, autoAlpha: 1, duration: 0.28, stagger: 0.035, ease: "power2.out" },
             );
           };
           mobileMenu.addEventListener("toggle", animateMenu);
-          cleanups.push(() =>
-            mobileMenu.removeEventListener("toggle", animateMenu),
-          );
+          cleanups.push(() => mobileMenu.removeEventListener("toggle", animateMenu));
         }
 
         return () => cleanups.forEach((cleanup) => cleanup());

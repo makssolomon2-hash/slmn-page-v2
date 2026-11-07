@@ -9,7 +9,7 @@ export const clerkAppearance = {
     borderRadius: "14px",
   },
   elements: {
-    card: "auth-clerk-card",
+    card: "border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.38)]",
   },
 };
 

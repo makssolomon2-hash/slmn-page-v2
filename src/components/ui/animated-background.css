@@ -1,0 +1,87 @@
+/* Animated Background Component Styles */
+
+.animated-background {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  --background-blur: 2px;
+  --bg-color: var(--page, #050607);
+  --glow-color: rgba(0, 179, 217, 0.2);
+  --shade-color: rgb(2, 7, 10);
+  background: var(--bg-color);
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.animated-background::before {
+  position: absolute;
+  inset: -24%;
+  background:
+    radial-gradient(ellipse at 25% 30%, rgba(0, 200, 232, 0.15), transparent 38%),
+    radial-gradient(ellipse at 76% 66%, rgba(34, 106, 166, 0.12), transparent 42%),
+    radial-gradient(ellipse at 52% 48%, rgba(8, 28, 36, 0.4), transparent 72%);
+  content: "";
+  filter: blur(44px);
+  opacity: 0.82;
+  animation: animated-bg-drift 26s ease-in-out infinite alternate;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.animated-background::after {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(91, 196, 220, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 196, 220, 0.018) 1px, transparent 1px);
+  background-size: 88px 88px;
+  content: "";
+  mask-image: linear-gradient(180deg, transparent 8%, #000 42%, transparent 100%);
+  filter: blur(var(--background-blur, 0px));
+  pointer-events: none;
+}
+
+.animated-background-glow {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: min(54vw, 680px);
+  aspect-ratio: 1;
+  transform: translate3d(var(--pointer-x, 50vw), var(--pointer-y, 50vh), 0) translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-color), rgba(0, 94, 128, 0.07) 35%, transparent 70%);
+  filter: blur(32px);
+  transition: transform 90ms linear;
+  will-change: transform;
+}
+
+.animated-background-shade {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: var(--shade-color);
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+@keyframes animated-bg-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(0.98);
+  }
+  to {
+    transform: translate3d(2%, 1%, 0) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-background::before {
+    animation: none;
+  }
+
+  .animated-background-glow {
+    display: none;
+  }
+}
